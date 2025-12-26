@@ -15,15 +15,15 @@
   },
   "homepage": "https://github.com/bchiang7/spotify-profile#readme",
   "engines": {
-    "node": "18.0.0"
+    "node": "24.x"
   },
   "scripts": {
+    "prepare": "husky install",
     "client:install": "cd client && npm install",
     "client": "cd client && npm run dev",
     "server": "node server",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "start": "node server",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "start": "node server"
   },
   "lint-staged": {
     "*.{js,jsx,css,json,md}": [
