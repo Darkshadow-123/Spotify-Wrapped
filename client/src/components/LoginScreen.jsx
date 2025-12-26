@@ -3,10 +3,7 @@ import styled from 'styled-components';
 import { theme, mixins, Main } from '../styles';
 const { colors, fontSizes } = theme;
 
-const LOGIN_URI =
-  import.meta.env.DEV
-    ? 'https://spotify-wrapped-chi.vercel.app/api/login'
-    : '/api/login';
+const LOGIN_URI = '/api/login';
 
 
 const Login = styled(Main)`
