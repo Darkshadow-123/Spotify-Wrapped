@@ -2,18 +2,15 @@
   "name": "spotify-profile",
   "version": "0.1.0",
   "description": "Spotify Profile",
-  "main": "server/index.js",
   "type": "module",
   "engines": {
     "node": "24.x"
   },
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "echo husky disabled on vercel",
     "client:install": "cd client && npm install",
     "client": "cd client && npm run dev",
-    "server": "node server",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "start": "node server",
+    "dev": "concurrently --kill-others-on-fail \"cd client\" \"npm run dev\"",
     "build": "cd client && npm install && npm run build"
   },
   "lint-staged": {
