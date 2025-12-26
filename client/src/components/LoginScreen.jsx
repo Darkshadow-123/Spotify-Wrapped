@@ -6,7 +6,7 @@ const { colors, fontSizes } = theme;
 const LOGIN_URI =
   import.meta.env.DEV
     ? 'http://127.0.0.1:8888/login'
-    : '/server/login';
+    : '/api/login';
 
 
 const Login = styled(Main)`

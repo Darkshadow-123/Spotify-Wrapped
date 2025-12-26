@@ -23,7 +23,7 @@ const refreshAccessToken = async () => {
       return;
     }
 
-    const { data } = await axios.get(`/refresh_token?refresh_token=${localRefresh}`);
+    const { data } = await axios.get(`/api/refresh_token?refresh_token=${localRefresh}`);
     const { access_token } = data;
     setLocalAccessToken(access_token);
     window.location.reload();
