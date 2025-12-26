@@ -42,7 +42,7 @@ const stateKey = "spotify_auth_state";
  * LOGIN
  */
 
-app.get("/login", (req, res) => {
+app.get("/api/login", (req, res) => {
   const state = generateRandomString(16);
   res.cookie(stateKey, state, { httpOnly: true });
 
@@ -63,7 +63,7 @@ app.get("/login", (req, res) => {
 /**
  * CALLBACK
  */
-app.get("/callback", (req, res) => {
+app.get("/api/callback", (req, res) => {
   const code = req.query.code || null;
   const state = req.query.state || null;
   const storedState = req.cookies?.[stateKey] || null;
@@ -112,7 +112,7 @@ app.get("/callback", (req, res) => {
 /**
  * REFRESH TOKEN
  */
-app.get("/refresh_token", (req, res) => {
+app.get("/api/refresh_token", (req, res) => {
   const refresh_token = req.query.refresh_token;
 
   const authOptions = {
