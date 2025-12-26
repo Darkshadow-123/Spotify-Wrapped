@@ -34,7 +34,7 @@ export default defineConfig({
   build: {
     outDir: 'build',
     sourcemap: false,
-    minify: 'terser'
+    minify: 'esbuild'
   },
   define: {
     'process.env': JSON.stringify(process.env)

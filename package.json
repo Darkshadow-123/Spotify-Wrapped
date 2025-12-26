@@ -10,7 +10,7 @@
     "prepare": "echo husky disabled on vercel",
     "client:install": "cd client && npm install",
     "client": "cd client && npm run dev",
-    "dev": "concurrently --kill-others-on-fail \"cd client\" \"npm run dev\"",
+    "dev": "cd client && npm run dev",
     "build": "cd client && npm install && npm run build"
   },
   "lint-staged": {
