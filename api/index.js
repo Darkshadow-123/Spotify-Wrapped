@@ -42,7 +42,7 @@ const stateKey = "spotify_auth_state";
 
 app.get("/api/login", (req, res) => {
   const state = generateRandomString(16);
-  res.cookie(stateKey, state, { httpOnly: true });
+  res.cookie(stateKey, state, {  httpOnly: true,secure: true,sameSite: 'none', });
 
   const scope =
     "user-read-private user-read-email user-read-recently-played user-top-read user-follow-read user-follow-modify playlist-read-private playlist-read-collaborative playlist-modify-public";

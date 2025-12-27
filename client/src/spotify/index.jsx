@@ -43,7 +43,7 @@ export const getAccessToken = () => {
   }
 
   // If token has expired
-  if (Date.now() - getTokenTimestamp() > EXPIRATION_TIME) {
+  if (getLocalAccessToken() && Date.now() - getTokenTimestamp() > EXPIRATION_TIME) {
     console.warn('Access token has expired, refreshing...');
     refreshAccessToken();
   }
