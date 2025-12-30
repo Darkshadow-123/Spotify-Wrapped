@@ -15,17 +15,17 @@ const AppContainer = styled.div`
 const App = () => {
   const [accessToken, setAccessToken] = useState('');
 
- useEffect(() => {
-  const hash = window.location.hash.substring(1);
-  const params = new URLSearchParams(hash);
+  useEffect(() => {
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
 
-  const accessToken = params.get("access_token");
+    const accessToken = params.get("access_token");
 
-  if (accessToken) {
-    setAccessToken(accessToken);
-    window.history.replaceState({}, document.title, "/");
-  }
-}, []);
+    if (accessToken) {
+      setAccessToken(accessToken);
+      window.history.replaceState({}, document.title, "/");
+    }
+  }, []);
 
 
   return (
