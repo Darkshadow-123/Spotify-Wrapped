@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "outputDirectory": "build",
+  "routes": [
+    {
+      "src": "^/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "^/(assets|manifest.json|favicon.ico|robots.txt|icons)/(.*)",
+      "dest": "/$1/$2"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": ".*",
+      "dest": "/index.html"
+    }
+  ]
+}

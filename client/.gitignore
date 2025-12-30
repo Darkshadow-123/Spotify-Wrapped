@@ -25,4 +25,5 @@ src/**/*.css
 
 package-lock.json
 
-.vscode/
+dist
+
