@@ -16,17 +16,17 @@ const App = () => {
   const [accessToken, setAccessToken] = useState('');
 
   useEffect(() => {
+    // Extract token from URL hash on mount
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
+    const tokenFromUrl = params.get("access_token");
 
-    const accessToken = params.get("access_token");
-
-    if (accessToken) {
-      setAccessToken(accessToken);
-      window.history.replaceState({}, document.title, "/");
+    if (tokenFromUrl) {
+      setAccessToken(tokenFromUrl);
+      // Clear the hash after extracting the token
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
-
 
   return (
     <AppContainer>
