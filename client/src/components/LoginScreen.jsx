@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import { theme, mixins, Main } from '../styles';
 const { colors, fontSizes } = theme;
 
-const LOGIN_URI =
-  import.meta.env.MODE !== 'production'
-    ? 'http://127.0.0.1:8888/login'
-    : 'https://spotify-profile.herokuapp.com/login';
+const LOGIN_URI = '/api/login';
+
 
 const Login = styled(Main)`
   ${mixins.flexCenter};

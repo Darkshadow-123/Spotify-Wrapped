@@ -2,28 +2,16 @@
   "name": "spotify-profile",
   "version": "0.1.0",
   "description": "Spotify Profile",
-  "main": "server/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bchiang7/spotify-profile.git"
-  },
-  "keywords": [],
-  "author": "Brittany Chiang <brittany.chiang@gmail.com>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bchiang7/spotify-profile/issues"
-  },
-  "homepage": "https://github.com/bchiang7/spotify-profile#readme",
+  "type": "module",
   "engines": {
-    "node": "18.0.0"
+    "node": "24.x"
   },
   "scripts": {
+    "prepare": "echo husky disabled on vercel",
     "client:install": "cd client && npm install",
     "client": "cd client && npm run dev",
-    "server": "node server",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "start": "node server",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "dev": "cd client && npm run dev",
+    "build": "cd client && npm install && npm run build"
   },
   "lint-staged": {
     "*.{js,jsx,css,json,md}": [
@@ -32,11 +20,6 @@
     "*.{js,jsx}": [
       "eslint --fix"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "dependencies": {
     "connect-history-api-fallback": "^1.6.0",
@@ -54,8 +37,8 @@
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.3",
-    "husky": "^4.2.3",
-    "lint-staged": "^10.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^10.5.4",
     "prettier": "^1.19.1"
   }
 }
