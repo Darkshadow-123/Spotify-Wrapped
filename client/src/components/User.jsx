@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getUserInfo, logout } from '../spotify';
+import UnauthorizedUser from './UnauthorizedUser';
 import { catchErrors } from '../utils';
 
 import { IconUser, IconInfo } from './icons';
@@ -182,24 +183,36 @@ const User = () => {
   const [playlists, setPlaylists] = useState(null);
   const [topArtists, setTopArtists] = useState(null);
   const [topTracks, setTopTracks] = useState(null);
+  const [unauthorized, setUnauthorized] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { user, followedArtists, playlists, topArtists, topTracks } = await getUserInfo();
-      setUser(user);
-      setFollowedArtists(followedArtists);
-      setPlaylists(playlists);
-      setTopArtists(topArtists);
-      setTopTracks(topTracks);
+      try {
+        const { user, followedArtists, playlists, topArtists, topTracks } = await getUserInfo();
+        setUser(user);
+        setFollowedArtists(followedArtists);
+        setPlaylists(playlists);
+        setTopArtists(topArtists);
+        setTopTracks(topTracks);
+      } catch (err) {
+        if (err?.isUnauthorized || err?.response?.status === 401 || err?.response?.status === 403) {
+          setUnauthorized(true);
+        } else {
+          console.error(err);
+        }
+      }
     };
-    catchErrors(fetchData());
+
+    fetchData();
   }, []);
 
   const totalPlaylists = playlists ? playlists.total : 0;
 
   return (
     <React.Fragment>
-      {user ? (
+      {unauthorized ? (
+        <UnauthorizedUser />
+      ) : user ? (
         <Main>
           <Header>
             <Avatar>
