@@ -3,6 +3,7 @@ import { token } from '../spotify';
 
 import LoginScreen from './LoginScreen';
 import Profile from './Profile';
+import UnauthorizedUser from './UnauthorizedUser';
 
 import styled from 'styled-components';
 import { GlobalStyle } from '../styles';
@@ -14,6 +15,7 @@ const AppContainer = styled.div`
 
 const App = () => {
   const [accessToken, setAccessToken] = useState('');
+  const [isAuthorized, setIsAuthorized] = useState(null);
 
   useEffect(() => {
     // Extract token from URL hash on mount
@@ -23,16 +25,31 @@ const App = () => {
 
     if (tokenFromUrl) {
       setAccessToken(tokenFromUrl);
+      setIsAuthorized(true);
       // Clear the hash after extracting the token
       window.history.replaceState({}, document.title, window.location.pathname);
     }
+  }, []);
+
+  // Listen for authorization errors from child components
+  useEffect(() => {
+    const handleAuthError = (event) => {
+      if (event.detail === 'UNAUTHORIZED') {
+        setIsAuthorized(false);
+      }
+    };
+
+    window.addEventListener('spotify-auth-error', handleAuthError);
+    return () => window.removeEventListener('spotify-auth-error', handleAuthError);
   }, []);
 
   return (
     <AppContainer>
       <GlobalStyle />
 
-      {accessToken ? <Profile /> : <LoginScreen />}
+      {!accessToken && <LoginScreen />}
+      {accessToken && isAuthorized === false && <UnauthorizedUser />}
+      {accessToken && isAuthorized !== false && <Profile />}
     </AppContainer>
   );
 };

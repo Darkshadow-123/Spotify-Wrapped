@@ -1,6 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
+import useAuthErrorHandler from '../hooks/useAuthErrorHandler';
+
 import ScrollToTop from './ScrollToTop';
 import Nav from './Nav';
 import User from './User';
@@ -24,23 +26,28 @@ const SiteWrapper = styled.div`
   `};
 `;
 
-const Profile = () => (
-  <SiteWrapper>
-    <Nav />
-      <ScrollToTop>
-      <Routes>
-        <Route path="/" element={<User />} />
-        <Route path="/recent" element={<RecentlyPlayed />} />
-        <Route path="/artists" element={<TopArtists />} />
-        <Route path="/tracks" element={<TopTracks />} />
-        <Route path="/playlists" element={<Playlists />} />
-        <Route path="/playlists/:playlistId" element={<Playlist />} />
-        <Route path="/recommendations/:playlistId" element={<Recommendations />} />
-        <Route path="/track/:trackId" element={<Track />} />
-        <Route path="/artist/:artistId" element={<Artist />} />
-      </Routes>
-      </ScrollToTop>
-  </SiteWrapper>
-);
+const Profile = () => {
+  // Hook to handle authorization errors
+  useAuthErrorHandler();
+
+  return (
+    <SiteWrapper>
+      <Nav />
+        <ScrollToTop>
+        <Routes>
+          <Route path="/" element={<User />} />
+          <Route path="/recent" element={<RecentlyPlayed />} />
+          <Route path="/artists" element={<TopArtists />} />
+          <Route path="/tracks" element={<TopTracks />} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/playlists/:playlistId" element={<Playlist />} />
+          <Route path="/recommendations/:playlistId" element={<Recommendations />} />
+          <Route path="/track/:trackId" element={<Track />} />
+          <Route path="/artist/:artistId" element={<Artist />} />
+        </Routes>
+        </ScrollToTop>
+    </SiteWrapper>
+  );
+};
 
 export default Profile;
