@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 import { formatWithCommas, catchErrors } from '../utils';
 import { getArtist } from '../spotify';
 
@@ -64,8 +64,8 @@ const NumLabel = styled.p`
   margin-top: ${spacing.xs};
 `;
 
-const Artist = props => {
-  const { artistId } = props;
+const Artist = () => {
+  const { artistId } = useParams();
   const [artist, setArtist] = useState(null);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const Artist = props => {
       const { data } = await getArtist(artistId);
       setArtist(data);
     };
-    catchErrors(fetchData());
+    catchErrors(fetchData)();
   }, [artistId]);
 
   return (
@@ -114,10 +114,6 @@ const Artist = props => {
       )}
     </React.Fragment>
   );
-};
-
-Artist.propTypes = {
-  artistId: PropTypes.string,
 };
 
 export default Artist;

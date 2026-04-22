@@ -114,7 +114,7 @@ const ArtistArtwork = styled(Link)`
     `};
   }
 `;
-const ArtistName = styled.a`
+const ArtistName = styled(Link)`
   margin: ${spacing.base} 0;
   border-bottom: 1px solid transparent;
   &:hover,
@@ -167,7 +167,7 @@ const TopArtists = () => {
       </Header>
       <ArtistsContainer>
         {topArtists ? (
-          topArtists.items.map(({ id, external_urls, images, name }, i) => (
+          topArtists.items.map(({ id, images, name }, i) => (
             <Artist key={i}>
               <ArtistArtwork to={`/artist/${id}`}>
                 {images.length && <img src={images[1].url} alt="Artist" />}
@@ -175,7 +175,7 @@ const TopArtists = () => {
                   <IconInfo />
                 </Mask>
               </ArtistArtwork>
-              <ArtistName href={external_urls.spotify} target="_blank" rel="noopener noreferrer">
+              <ArtistName to={`/artist/${id}`}>
                 {name}
               </ArtistName>
             </Artist>
