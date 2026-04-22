@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Chart as ChartJS,
@@ -7,6 +7,8 @@ import {
   PointElement,
   LineElement,
   BarElement,
+  BarController,
+  LineController,
   Title,
   Tooltip,
   Legend,
@@ -37,8 +39,23 @@ const Container = styled.div`
   }
 `;
 
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  BarController,
+  LineController,
+  Title,
+  Tooltip,
+  Legend,
+);
+
 const FeatureChart = props => {
   const avg = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+  const canvasRef = useRef(null);
+  const chartRef = useRef(null);
 
   useEffect(() => {
     const createDataset = features => {
@@ -53,11 +70,18 @@ const FeatureChart = props => {
 
     const createChart = dataset => {
       const { type } = props;
-      const ctx = document.getElementById('chart');
+      const ctx = canvasRef.current;
+      if (!ctx) return;
+
+      if (chartRef.current) {
+        chartRef.current.destroy();
+        chartRef.current = null;
+      }
+
       const labels = Object.keys(dataset);
       const data = Object.values(dataset);
 
-      new ChartJS(ctx, {
+      chartRef.current = new ChartJS(ctx, {
         type: type || 'bar',
         data: {
           labels,
@@ -88,49 +112,27 @@ const FeatureChart = props => {
           ],
         },
         options: {
-          layout: {
-            padding: {
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
+          layout: { padding: 0 },
+          plugins: {
+            legend: { display: false },
+            title: {
+              display: true,
+              text: 'Audio Features',
+              color: '#ffffff',
+              padding: { top: 30, bottom: 30 },
+              font: { size: 18, family: `${fonts.primary}` },
             },
           },
-          title: {
-            display: true,
-            text: `Audio Features`,
-            fontSize: 18,
-            fontFamily: `${fonts.primary}`,
-            fontColor: '#ffffff',
-            padding: 30,
-          },
-          legend: {
-            display: false,
-          },
           scales: {
-            xAxes: [
-              {
-                gridLines: {
-                  color: 'rgba(255, 255, 255, 0.3)',
-                },
-                ticks: {
-                  fontFamily: `${fonts.primary}`,
-                  fontSize: 12,
-                },
-              },
-            ],
-            yAxes: [
-              {
-                gridLines: {
-                  color: 'rgba(255, 255, 255, 0.3)',
-                },
-                ticks: {
-                  beginAtZero: true,
-                  fontFamily: `${fonts.primary}`,
-                  fontSize: 12,
-                },
-              },
-            ],
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.3)' },
+              ticks: { font: { family: `${fonts.primary}`, size: 12 } },
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255, 255, 255, 0.3)' },
+              ticks: { font: { family: `${fonts.primary}`, size: 12 } },
+            },
           },
         },
       });
@@ -143,11 +145,17 @@ const FeatureChart = props => {
     };
 
     parseData();
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.destroy();
+        chartRef.current = null;
+      }
+    };
   }, [props]);
 
   return (
     <Container>
-      <canvas id="chart" width="400" height="400" />
+      <canvas ref={canvasRef} width="400" height="400" />
     </Container>
   );
 };
