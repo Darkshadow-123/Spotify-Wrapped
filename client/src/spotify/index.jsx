@@ -217,13 +217,21 @@ const getTrackIds = tracks => tracks.map(({ track }) => track.id).join(',');
  * https://developer.spotify.com/documentation/web-api/reference/tracks/get-several-audio-features/
  */
 export const getAudioFeaturesForTracks = tracks => {
-  const ids = getTrackIds(tracks);
-  return axios.get(`https://api.reccobeats.com/v1/audio-features?ids=${ids}`).then(({ data }) => ({
-    data: {
-      // Keep existing consumer shape used by Playlist.jsx
-      audio_features: data?.content || [],
-    },
-  }));
+  const ids = Array.from(new Set(tracks.map(({ track }) => track?.id).filter(Boolean)));
+  const chunkSize = 50;
+  const chunks = [];
+  for (let i = 0; i < ids.length; i += chunkSize) {
+    chunks.push(ids.slice(i, i + chunkSize));
+  }
+
+  return Promise.all(chunks.map(chunk => axios.get(`https://api.reccobeats.com/v1/audio-features?ids=${chunk.join(',')}`)))
+    .then(responses => responses.flatMap(r => r?.data?.content || []))
+    .then(content => ({
+      data: {
+        // Keep existing consumer shape used by Playlist.jsx
+        audio_features: content,
+      },
+    }));
 };
 
 /**
