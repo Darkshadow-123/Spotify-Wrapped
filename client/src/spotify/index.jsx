@@ -218,7 +218,7 @@ const getTrackIds = tracks => tracks.map(({ track }) => track.id).join(',');
  */
 export const getAudioFeaturesForTracks = tracks => {
   const ids = getTrackIds(tracks);
-  return axios.get(`https://api.spotify.com/v1/audio-features?ids=${ids}`, { headers: getHeaders() });
+  return axios.get(`https://api.reccobeats.com/v1/audio-features?ids=${ids}`);
 };
 
 /**
@@ -258,7 +258,7 @@ export const getTrackAudioAnalysis = trackId =>
  * https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/
  */
 export const getTrackAudioFeatures = trackId =>
-  axios.get(`https://api.spotify.com/v1/audio-features/${trackId}`, { headers: getHeaders() });
+  axios.get(`https://api.reccobeats.com/v1/track/${trackId}/audio-features`);
 
 export const getUserInfo = () =>
   axios
