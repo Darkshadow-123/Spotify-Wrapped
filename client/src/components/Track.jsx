@@ -116,14 +116,12 @@ const Track = () => {
   const { trackId } = useParams();
 
   const [track, setTrack] = useState(null);
-  const [audioAnalysis, setAudioAnalysis] = useState(null);
   const [audioFeatures, setAudioFeatures] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getTrackInfo(trackId);
       setTrack(data.track);
-      setAudioAnalysis(data.audioAnalysis);
       setAudioFeatures(data.audioFeatures);
     };
     catchErrors(fetchData)();
@@ -167,7 +165,7 @@ const Track = () => {
             </Info>
           </TrackContainer>
 
-          {audioFeatures && audioAnalysis && (
+          {audioFeatures && (
             <AudioFeatures>
               <Features>
                 <Feature>
@@ -193,22 +191,6 @@ const Track = () => {
                 <Feature>
                   <FeatureText>{track.popularity}%</FeatureText>
                   <FeatureLabel>Popularity</FeatureLabel>
-                </Feature>
-                <Feature>
-                  <FeatureText>{audioAnalysis.bars.length}</FeatureText>
-                  <FeatureLabel>Bars</FeatureLabel>
-                </Feature>
-                <Feature>
-                  <FeatureText>{audioAnalysis.beats.length}</FeatureText>
-                  <FeatureLabel>Beats</FeatureLabel>
-                </Feature>
-                <Feature>
-                  <FeatureText>{audioAnalysis.sections.length}</FeatureText>
-                  <FeatureLabel>Sections</FeatureLabel>
-                </Feature>
-                <Feature>
-                  <FeatureText>{audioAnalysis.segments.length}</FeatureText>
-                  <FeatureLabel>Segments</FeatureLabel>
                 </Feature>
               </Features>
 

@@ -218,7 +218,12 @@ const getTrackIds = tracks => tracks.map(({ track }) => track.id).join(',');
  */
 export const getAudioFeaturesForTracks = tracks => {
   const ids = getTrackIds(tracks);
-  return axios.get(`https://api.reccobeats.com/v1/audio-features?ids=${ids}`);
+  return axios.get(`https://api.reccobeats.com/v1/audio-features?ids=${ids}`).then(({ data }) => ({
+    data: {
+      // Keep existing consumer shape used by Playlist.jsx
+      audio_features: data?.content || [],
+    },
+  }));
 };
 
 /**
@@ -247,18 +252,13 @@ export const getTrack = trackId =>
   axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, { headers: getHeaders() });
 
 /**
- * Get Audio Analysis for a Track
- * https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-analysis/
- */
-export const getTrackAudioAnalysis = trackId =>
-  axios.get(`https://api.spotify.com/v1/audio-analysis/${trackId}`, { headers: getHeaders() });
-
-/**
  * Get Audio Features for a Track
  * https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/
  */
 export const getTrackAudioFeatures = trackId =>
-  axios.get(`https://api.reccobeats.com/v1/track/${trackId}/audio-features`);
+  axios.get(`https://api.reccobeats.com/v1/audio-features?ids=${trackId}`).then(({ data }) => ({
+    data: data?.content?.[0] || null,
+  }));
 
 export const getUserInfo = () =>
   axios
@@ -285,20 +285,12 @@ export const getUserInfo = () =>
 
 export const getTrackInfo = async trackId => {
   const track = await getTrack(trackId);
-
-  const [audioAnalysisResult, audioFeaturesResult] = await Promise.allSettled([
-    getTrackAudioAnalysis(trackId),
-    getTrackAudioFeatures(trackId),
-  ]);
-
-  const audioAnalysis =
-    audioAnalysisResult.status === 'fulfilled' ? audioAnalysisResult.value?.data || null : null;
+  const [audioFeaturesResult] = await Promise.allSettled([getTrackAudioFeatures(trackId)]);
   const audioFeatures =
     audioFeaturesResult.status === 'fulfilled' ? audioFeaturesResult.value?.data || null : null;
 
   return {
     track: track.data,
-    audioAnalysis,
     audioFeatures,
   };
 };
