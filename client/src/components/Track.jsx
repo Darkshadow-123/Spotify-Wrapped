@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 import { formatDuration, getYear, parsePitchClass, catchErrors } from '../utils';
 import { getTrackInfo } from '../spotify';
 
@@ -112,8 +112,8 @@ const DescriptionLink = styled.a`
   }
 `;
 
-const Track = props => {
-  const { trackId } = props;
+const Track = () => {
+  const { trackId } = useParams();
 
   const [track, setTrack] = useState(null);
   const [audioAnalysis, setAudioAnalysis] = useState(null);
@@ -126,7 +126,7 @@ const Track = props => {
       setAudioAnalysis(data.audioAnalysis);
       setAudioFeatures(data.audioFeatures);
     };
-    catchErrors(fetchData());
+    catchErrors(fetchData)();
   }, [trackId]);
 
   return (
@@ -228,10 +228,6 @@ const Track = props => {
       )}
     </React.Fragment>
   );
-};
-
-Track.propTypes = {
-  trackId: PropTypes.string,
 };
 
 export default Track;
