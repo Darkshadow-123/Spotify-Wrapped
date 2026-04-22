@@ -81,8 +81,11 @@ const FeatureChart = props => {
       const labels = Object.keys(dataset);
       const data = Object.values(dataset);
 
+      const chartType = type === 'horizontalBar' ? 'bar' : type || 'bar';
+      const indexAxis = type === 'horizontalBar' ? 'y' : 'x';
+
       chartRef.current = new ChartJS(ctx, {
-        type: type || 'bar',
+        type: chartType,
         data: {
           labels,
           datasets: [
@@ -113,6 +116,7 @@ const FeatureChart = props => {
         },
         options: {
           layout: { padding: 0 },
+          indexAxis,
           plugins: {
             legend: { display: false },
             title: {
