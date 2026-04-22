@@ -283,13 +283,22 @@ export const getUserInfo = () =>
       throw err;
     });
 
-export const getTrackInfo = trackId =>
-  axios
-    .all([getTrack(trackId), getTrackAudioAnalysis(trackId), getTrackAudioFeatures(trackId)])
-    .then(
-      axios.spread((track, audioAnalysis, audioFeatures) => ({
-        track: track.data,
-        audioAnalysis: audioAnalysis.data,
-        audioFeatures: audioFeatures.data,
-      })),
-    );
+export const getTrackInfo = async trackId => {
+  const track = await getTrack(trackId);
+
+  const [audioAnalysisResult, audioFeaturesResult] = await Promise.allSettled([
+    getTrackAudioAnalysis(trackId),
+    getTrackAudioFeatures(trackId),
+  ]);
+
+  const audioAnalysis =
+    audioAnalysisResult.status === 'fulfilled' ? audioAnalysisResult.value?.data || null : null;
+  const audioFeatures =
+    audioFeaturesResult.status === 'fulfilled' ? audioFeaturesResult.value?.data || null : null;
+
+  return {
+    track: track.data,
+    audioAnalysis,
+    audioFeatures,
+  };
+};
