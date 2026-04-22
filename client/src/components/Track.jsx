@@ -169,7 +169,7 @@ const Track = () => {
             <AudioFeatures>
               <Features>
                 <Feature>
-                  <FeatureText>{formatDuration(audioFeatures.duration_ms)}</FeatureText>
+                  <FeatureText>{formatDuration(track.duration_ms)}</FeatureText>
                   <FeatureLabel>Duration</FeatureLabel>
                 </Feature>
                 <Feature>
@@ -181,7 +181,7 @@ const Track = () => {
                   <FeatureLabel>Modality</FeatureLabel>
                 </Feature>
                 <Feature>
-                  <FeatureText>{audioFeatures.time_signature}</FeatureText>
+                  <FeatureText>{audioFeatures.time_signature ?? '—'}</FeatureText>
                   <FeatureLabel>Time Signature</FeatureLabel>
                 </Feature>
                 <Feature>
