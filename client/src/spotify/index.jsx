@@ -218,13 +218,19 @@ const getTrackIds = tracks => tracks.map(({ track }) => track.id).join(',');
  */
 export const getAudioFeaturesForTracks = tracks => {
   const ids = Array.from(new Set(tracks.map(({ track }) => track?.id).filter(Boolean)));
-  const chunkSize = 50;
+  // ReccoBeats rejects very long `ids=` query strings; keep chunks small.
+  const chunkSize = 20;
   const chunks = [];
   for (let i = 0; i < ids.length; i += chunkSize) {
     chunks.push(ids.slice(i, i + chunkSize));
   }
 
-  return Promise.all(chunks.map(chunk => axios.get(`https://api.reccobeats.com/v1/audio-features?ids=${chunk.join(',')}`)))
+  return Promise.all(
+    chunks.map(chunk => {
+      const params = new URLSearchParams({ ids: chunk.join(',') });
+      return axios.get(`https://api.reccobeats.com/v1/audio-features?${params.toString()}`);
+    }),
+  )
     .then(responses => responses.flatMap(r => r?.data?.content || []))
     .then(content => ({
       data: {
