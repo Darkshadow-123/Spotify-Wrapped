@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, useParams } from 'react-router-dom';
 import { getPlaylist, getAudioFeaturesForTracks } from '../spotify';
 import { catchErrors } from '../utils';
 
@@ -74,8 +73,8 @@ const TotalTracks = styled.p`
   margin-top: 20px;
 `;
 
-const Playlist = props => {
-  const { playlistId } = props;
+const Playlist = () => {
+  const { playlistId } = useParams();
 
   const [playlist, setPlaylist] = useState(null);
   const [audioFeatures, setAudioFeatures] = useState(null);
@@ -141,10 +140,6 @@ const Playlist = props => {
       )}
     </React.Fragment>
   );
-};
-
-Playlist.propTypes = {
-  playlistId: PropTypes.string,
 };
 
 export default Playlist;

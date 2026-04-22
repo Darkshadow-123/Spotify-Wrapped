@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, useParams } from 'react-router-dom';
 import {
   getPlaylist,
   getRecommendationsForTracks,
@@ -44,8 +43,8 @@ const PlaylistLink = styled(Link)`
   }
 `;
 
-const Recommendations = props => {
-  const { playlistId } = props;
+const Recommendations = () => {
+  const { playlistId } = useParams();
 
   const [playlist, setPlaylist] = useState(null);
   const [recommendations, setRecommmendations] = useState(null);
@@ -137,10 +136,6 @@ const Recommendations = props => {
       </TracksContainer>
     </Main>
   );
-};
-
-Recommendations.propTypes = {
-  playlistId: PropTypes.string,
 };
 
 export default Recommendations;
