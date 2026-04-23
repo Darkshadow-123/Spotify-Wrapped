@@ -245,17 +245,56 @@ export const getAudioFeaturesForTracks = tracks => {
  * https://developer.spotify.com/documentation/web-api/reference/browse/get-recommendations/
  */
 export const getRecommendationsForTracks = tracks => {
-  const shuffledTracks = tracks.sort(() => 0.5 - Math.random());
-  const seed_tracks = getTrackIds(shuffledTracks.slice(0, 5));
-  const seed_artists = '';
-  const seed_genres = '';
+  const shuffledTracks = tracks
+    .map(({ track }) => track)
+    .filter(Boolean)
+    .sort(() => 0.5 - Math.random());
+  const seeds = Array.from(new Set(shuffledTracks.map(track => track.id).filter(Boolean))).slice(0, 5);
 
-  return axios.get(
-    `https://api.spotify.com/v1/recommendations?seed_tracks=${seed_tracks}&seed_artists=${seed_artists}&seed_genres=${seed_genres}`,
-    {
-      headers: getHeaders(),
-    },
-  );
+  if (!seeds.length) {
+    return Promise.resolve({ data: { tracks: [] } });
+  }
+
+  const params = new URLSearchParams();
+  params.append('size', '20');
+  seeds.forEach(seed => params.append('seeds', seed));
+
+  const getSpotifyTrackId = item => {
+    if (!item) return null;
+
+    // ReccoBeats often returns Spotify hrefs, e.g. https://open.spotify.com/track/<id>
+    if (item.href) {
+      const match = item.href.match(/\/track\/([A-Za-z0-9]+)$/);
+      if (match?.[1]) return match[1];
+    }
+
+    // Fallbacks in case API provides plain IDs with different field names
+    return item.spotifyId || item.trackId || item.id || null;
+  };
+
+  return axios
+    .get(`https://api.reccobeats.com/v1/track/recommendation?${params.toString()}`, {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+    .then(({ data }) => {
+      const recItems = data?.content || [];
+      const recommendedIds = Array.from(new Set(recItems.map(getSpotifyTrackId).filter(Boolean)));
+
+      if (!recommendedIds.length) {
+        return { data: { tracks: [] } };
+      }
+
+      return Promise.allSettled(recommendedIds.map(id => getTrack(id))).then(results => {
+        const resolvedTracks = results
+          .filter(result => result.status === 'fulfilled')
+          .map(result => result.value?.data)
+          .filter(Boolean);
+
+        return { data: { tracks: resolvedTracks } };
+      });
+    });
 };
 
 /**
